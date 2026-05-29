@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>All Is One</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--gold:#D4A017;--gold2:#F0C040;--gold3:#FFF0A0;--dark:#0A0A0F;--dark2:#12121A;--dark3:#1A1A26;--text:#F0EAD6;--muted:#9A8F7A;}
+body{background:var(--dark);color:var(--text);font-family:'Raleway',sans-serif;min-height:100vh;overflow-x:hidden;}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle var(--d,3s) ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:0.15;}50%{opacity:1;}}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.8s ease;pointer-events:none;opacity:0;}
+#splash.show{opacity:1;pointer-events:all;}
+.splash-title{font-family:'Cinzel Decorative',serif;font-size:clamp(2.5rem,8vw,6rem);font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3),var(--gold));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;animation:shimmer 3s ease-in-out infinite;}
+@keyframes shimmer{0%,100%{filter:brightness(1);}50%{filter:brightness(1.3);}}
+.splash-sub{font-size:1rem;color:var(--muted);letter-spacing:0.4em;text-transform:uppercase;margin-top:0.8rem;animation:fadeup 1.2s ease forwards;opacity:0;}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.splash-ring{width:120px;height:120px;border:2px solid var(--gold);border-radius:50%;position:absolute;animation:pulse-ring 2s ease-out infinite;}
+.splash-ring:nth-child(2){animation-delay:0.6s;opacity:0.5;}
+@keyframes pulse-ring{0%{transform:scale(0.8);opacity:1;}100%{transform:scale(2);opacity:0;}}
+
+/* AUTH */
+#auth-page{position:fixed;inset:0;z-index:8000;display:flex;align-items:center;justify-content:center;background:var(--dark);padding:1rem;overflow-y:auto;}
+#auth-page.hide{display:none;}
+.auth-box{width:100%;max-width:430px;background:var(--dark2);border:1px solid rgba(212,160,23,0.25);border-radius:22px;padding:2.8rem 2.4rem;animation:floatIn 0.7s cubic-bezier(0.34,1.3,0.64,1);position:relative;z-index:1;}
+@keyframes floatIn{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.auth-logo{font-family:'Cinzel Decorative',serif;font-size:1.9rem;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;animation:shimmer 3s ease-in-out infinite;}
+.auth-tagline{text-align:center;font-size:0.72rem;letter-spacing:0.4em;color:var(--muted);text-transform:uppercase;margin-top:0.3rem;margin-bottom:1.8rem;}
+.auth-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(212,160,23,0.4),transparent);margin-bottom:1.8rem;}
+.auth-tabs{display:flex;background:var(--dark3);border-radius:50px;padding:4px;margin-bottom:1.8rem;}
+.auth-tab{flex:1;text-align:center;padding:0.55rem;border-radius:50px;font-size:0.85rem;font-weight:600;letter-spacing:0.08em;cursor:pointer;transition:all 0.3s;color:var(--muted);}
+.auth-tab.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);}
+.auth-form{display:none;}.auth-form.active{display:block;animation:fadein 0.3s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.auth-form .fg{margin-bottom:1.2rem;}
+.auth-form label{display:block;font-size:0.72rem;color:var(--gold);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.45rem;}
+.auth-form input{width:100%;background:var(--dark3);border:1px solid rgba(212,160,23,0.2);color:var(--text);font-family:'Raleway',sans-serif;font-size:0.95rem;padding:0.75rem 1rem;border-radius:10px;outline:none;transition:border-color 0.2s;}
+.auth-form input:focus{border-color:var(--gold);}
+.auth-form input::placeholder{color:var(--muted);font-size:0.85rem;}
+.pass-wrap{position:relative;}.pass-wrap input{padding-right:2.8rem;}
+.pass-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1rem;color:var(--muted);user-select:none;}
+.pass-eye:hover{color:var(--gold);}
+.forgot{text-align:right;margin-top:-0.5rem;margin-bottom:1rem;}
+.forgot span{font-size:0.76rem;color:var(--muted);cursor:pointer;}.forgot span:hover{color:var(--gold);}
+.auth-submit{width:100%;font-family:'Cinzel Decorative',serif;font-size:0.95rem;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:0.95rem;border-radius:50px;cursor:pointer;letter-spacing:0.08em;margin-top:0.3rem;transition:all 0.3s;}
+.auth-submit:hover{box-shadow:0 4px 20px rgba(212,160,23,0.45);transform:scale(1.02);}
+.auth-msg{font-size:0.8rem;text-align:center;margin-top:0.7rem;min-height:1.1rem;}
+.auth-msg.error{color:#FF8080;}.auth-msg.success{color:#80FFB0;}
+.auth-switch{text-align:center;font-size:0.82rem;color:var(--muted);margin-top:1.2rem;}
+.auth-switch span{color:var(--gold);cursor:pointer;text-decoration:underline;}
+
+/* USER BAR */
+.user-bar{position:fixed;top:14px;right:18px;z-index:300;display:none;align-items:center;gap:10px;}
+.user-bar.show{display:flex;}
+.notif-btn{position:relative;background:var(--dark3);border:1px solid rgba(212,160,23,0.3);color:var(--gold2);font-size:1.1rem;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.notif-btn:hover{border-color:var(--gold);background:rgba(212,160,23,0.1);}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:#FF4444;color:#fff;font-size:0.6rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;display:none;}
+.notif-badge.show{display:flex;}
+.user-name-badge{background:var(--dark3);border:1px solid rgba(212,160,23,0.3);color:var(--gold2);font-size:0.78rem;padding:0.35rem 0.9rem;border-radius:20px;}
+.logout-btn{background:transparent;border:1px solid rgba(212,160,23,0.3);color:var(--muted);font-size:0.75rem;padding:0.35rem 0.8rem;border-radius:20px;cursor:pointer;font-family:'Raleway',sans-serif;transition:all 0.2s;}
+.logout-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* NOTIFICATION PANEL */
+.notif-panel{position:fixed;top:60px;right:18px;width:360px;max-height:500px;background:var(--dark2);border:1px solid rgba(212,160,23,0.3);border-radius:16px;z-index:500;display:none;overflow:hidden;animation:fadein 0.2s ease;box-shadow:0 8px 32px rgba(0,0,0,0.5);}
+.notif-panel.show{display:block;}
+.notif-panel-header{padding:1rem 1.2rem;border-bottom:1px solid rgba(212,160,23,0.15);display:flex;justify-content:space-between;align-items:center;}
+.notif-panel-title{font-family:'Cinzel Decorative',serif;font-size:0.85rem;color:var(--gold2);}
+.notif-panel-close{background:transparent;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;}
+.notif-list{overflow-y:auto;max-height:430px;}
+.notif-item{padding:1rem 1.2rem;border-bottom:1px solid rgba(212,160,23,0.08);animation:fadein 0.3s ease;}
+.notif-item.unread{background:rgba(212,160,23,0.04);}
+.notif-item-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;}
+.notif-item-title{font-size:0.85rem;color:var(--text);font-weight:600;}
+.notif-item-time{font-size:0.7rem;color:var(--muted);}
+.notif-item-msg{font-size:0.78rem;color:var(--muted);line-height:1.5;margin-bottom:0.6rem;}
+.notif-actions{display:flex;gap:0.5rem;}
+.notif-approve{font-size:0.75rem;background:linear-gradient(135deg,#00A86B,#00C880);color:#fff;border:none;padding:0.4rem 1rem;border-radius:20px;cursor:pointer;font-family:'Raleway',sans-serif;transition:all 0.2s;}
+.notif-approve:hover{transform:scale(1.03);}
+.notif-reject{font-size:0.75rem;background:transparent;border:1px solid rgba(255,80,80,0.4);color:#FF8080;padding:0.4rem 1rem;border-radius:20px;cursor:pointer;font-family:'Raleway',sans-serif;}
+.notif-approved-tag{font-size:0.72rem;color:#60EFA0;background:rgba(0,200,100,0.1);border:1px solid rgba(0,200,100,0.3);padding:0.3rem 0.8rem;border-radius:20px;}
+.notif-rejected-tag{font-size:0.72rem;color:#FF8080;background:rgba(255,80,80,0.1);border:1px solid rgba(255,80,80,0.3);padding:0.3rem 0.8rem;border-radius:20px;}
+.notif-empty{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:0.85rem;}
+
+/* HEADER */
+header{position:relative;z-index:10;text-align:center;padding:3rem 1rem 1rem;}
+.logo{font-family:'Cinzel Decorative',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.tagline{font-size:0.85rem;letter-spacing:0.5em;color:var(--muted);text-transform:uppercase;margin-top:0.4rem;}
+.divider{width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:1.2rem auto;}
+
+/* PAGES */
+.page{display:none;position:relative;z-index:10;animation:pagein 0.4s ease;}
+.page.active{display:block;}
+@keyframes pagein{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.headline{font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,3.5vw,2.2rem);text-align:center;color:var(--gold2);letter-spacing:0.08em;margin-bottom:0.5rem;}
+.sub-headline{text-align:center;color:var(--muted);font-size:0.9rem;letter-spacing:0.2em;margin-bottom:2.5rem;}
+.city-bar{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:2.5rem;flex-wrap:wrap;padding:0 1rem;}
+.city-bar label{font-size:0.85rem;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;}
+.city-select{background:var(--dark3);border:1px solid var(--gold);color:var(--text);font-family:'Raleway',sans-serif;font-size:0.95rem;padding:0.5rem 1.2rem;border-radius:30px;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23D4A017' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:2.2rem;}
+.categories{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;padding:0 1.5rem;margin-bottom:3rem;}
+.cat-card{width:220px;cursor:pointer;border-radius:16px;border:1px solid rgba(212,160,23,0.2);background:var(--dark2);padding:2rem 1.2rem;text-align:center;transition:all 0.3s ease;position:relative;overflow:hidden;}
+.cat-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.3s;}
+.cat-card.holy::before{background:radial-gradient(circle at top,rgba(123,79,191,0.15),transparent);}
+.cat-card.college::before{background:radial-gradient(circle at top,rgba(27,108,168,0.15),transparent);}
+.cat-card.celeb::before{background:radial-gradient(circle at top,rgba(192,57,43,0.15),transparent);}
+.cat-card:hover{transform:translateY(-6px);border-color:var(--gold);}.cat-card:hover::before{opacity:1;}
+.cat-icon{font-size:2.8rem;margin-bottom:1rem;display:block;}
+.cat-name{font-family:'Cinzel Decorative',serif;font-size:0.9rem;color:var(--gold2);letter-spacing:0.06em;margin-bottom:0.4rem;}
+.cat-desc{font-size:0.78rem;color:var(--muted);}
+.cat-badge{position:absolute;top:12px;right:12px;font-size:0.65rem;padding:3px 8px;border-radius:20px;letter-spacing:0.1em;}
+.cat-card.holy .cat-badge{background:rgba(123,79,191,0.2);color:#B07FFF;}
+.cat-card.college .cat-badge{background:rgba(27,108,168,0.2);color:#5BB4FF;}
+.cat-card.celeb .cat-badge{background:rgba(192,57,43,0.2);color:#FF7F7F;}
+.sell-wrap{text-align:center;margin-bottom:2rem;}
+.sell-btn{font-family:'Cinzel Decorative',serif;font-size:1.1rem;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:1rem 3rem;border-radius:50px;cursor:pointer;letter-spacing:0.1em;transition:all 0.3s;box-shadow:0 4px 20px rgba(212,160,23,0.3);}
+.sell-btn:hover{transform:scale(1.05);}
+.my-tickets-wrap{text-align:center;margin-bottom:4rem;}
+.my-tickets-btn{font-family:'Cinzel Decorative',serif;font-size:0.95rem;background:transparent;border:1px solid rgba(212,160,23,0.4);color:var(--gold);padding:0.75rem 2.5rem;border-radius:50px;cursor:pointer;letter-spacing:0.08em;transition:all 0.3s;}
+.my-tickets-btn:hover{background:rgba(212,160,23,0.08);border-color:var(--gold);}
+.back-btn{display:inline-flex;align-items:center;gap:8px;color:var(--gold);font-size:0.85rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(212,160,23,0.3);padding:0.5rem 1.2rem;border-radius:30px;margin:1.5rem 1.5rem 0;transition:all 0.2s;background:transparent;}
+.back-btn:hover{border-color:var(--gold);background:rgba(212,160,23,0.08);}
+.page-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.3rem,3vw,2rem);text-align:center;color:var(--gold2);padding:1.5rem 1rem 0.3rem;}
+.page-sub{text-align:center;color:var(--muted);font-size:0.85rem;letter-spacing:0.2em;margin-bottom:2rem;}
+
+/* EVENTS GRID */
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;padding:0 1.5rem 3rem;max-width:1100px;margin:0 auto;}
+.event-card{background:var(--dark2);border:1px solid rgba(212,160,23,0.15);border-radius:14px;overflow:hidden;transition:all 0.3s;}
+.event-card:hover{transform:translateY(-4px);border-color:rgba(212,160,23,0.5);}
+.event-card-top{height:130px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative;}
+.event-card-top.holy-bg{background:linear-gradient(135deg,#1A0D2E,#2D1550);}
+.event-card-top.college-bg{background:linear-gradient(135deg,#0A1628,#1A3A5C);}
+.event-card-top.celeb-bg{background:linear-gradient(135deg,#1E0A0A,#4A1515);}
+.event-body{padding:1rem 1.2rem;}
+.event-name{font-family:'Cinzel Decorative',serif;font-size:0.9rem;color:var(--gold2);margin-bottom:0.5rem;}
+.event-meta{display:flex;flex-direction:column;gap:4px;margin-bottom:0.8rem;}
+.event-meta span{font-size:0.78rem;color:var(--muted);}
+.event-footer{display:flex;align-items:center;justify-content:space-between;padding-top:0.8rem;border-top:1px solid rgba(212,160,23,0.1);}
+.event-price-tag{font-size:1rem;font-weight:600;color:var(--gold);}
+.buy-btn{font-family:'Cinzel Decorative',serif;font-size:0.72rem;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:0.5rem 1.1rem;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+.buy-btn:hover{transform:scale(1.05);box-shadow:0 3px 12px rgba(212,160,23,0.4);}
+.buy-btn.free{background:linear-gradient(135deg,#1B6CA8,#2E9BE0);color:#fff;}
+.seats-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.6);border:1px solid rgba(212,160,23,0.3);color:var(--gold2);font-size:0.65rem;padding:3px 8px;border-radius:10px;}
+.no-events{text-align:center;padding:4rem 1rem;color:var(--muted);grid-column:1/-1;}
+.no-events .big-icon{font-size:4rem;margin-bottom:1rem;}
+
+/* MY TICKETS PAGE */
+.tickets-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;padding:0 1.5rem 3rem;max-width:1000px;margin:0 auto;}
+.ticket-card{background:var(--dark2);border:1px solid rgba(212,160,23,0.15);border-radius:14px;overflow:hidden;transition:all 0.3s;}
+.ticket-card-header{padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed rgba(212,160,23,0.15);}
+.ticket-card-name{font-family:'Cinzel Decorative',serif;font-size:0.85rem;color:var(--gold2);}
+.ticket-status-pending{font-size:0.68rem;background:rgba(255,180,0,0.12);border:1px solid rgba(255,180,0,0.3);color:#FFB400;padding:3px 10px;border-radius:20px;letter-spacing:0.1em;}
+.ticket-status-confirmed{font-size:0.68rem;background:rgba(0,200,100,0.12);border:1px solid rgba(0,200,100,0.3);color:#60EFA0;padding:3px 10px;border-radius:20px;letter-spacing:0.1em;}
+.ticket-status-rejected{font-size:0.68rem;background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.3);color:#FF8080;padding:3px 10px;border-radius:20px;letter-spacing:0.1em;}
+.ticket-card-body{padding:1rem 1.2rem;}
+.ticket-meta{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem;}
+.ticket-meta span{font-size:0.78rem;color:var(--muted);}
+.ticket-pending-msg{font-size:0.78rem;color:#FFB400;background:rgba(255,180,0,0.06);border:1px solid rgba(255,180,0,0.2);border-radius:8px;padding:0.6rem 0.8rem;margin-bottom:0.8rem;line-height:1.5;}
+.ticket-download-btn{width:100%;font-family:'Cinzel Decorative',serif;font-size:0.8rem;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:0.65rem;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+.ticket-download-btn:hover{transform:scale(1.02);}
+.no-tickets{text-align:center;padding:4rem 1rem;color:var(--muted);}
+.no-tickets .big-icon{font-size:4rem;margin-bottom:1rem;}
+
+/* COMMON FORM */
+.form-wrap{max-width:600px;margin:0 auto;padding:0 1.5rem 4rem;}
+.form-card{background:var(--dark2);border:1px solid rgba(212,160,23,0.2);border-radius:18px;padding:2.5rem;}
+.form-card-title{font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--gold2);margin-bottom:0.4rem;text-align:center;}
+.form-card-sub{text-align:center;color:var(--muted);font-size:0.82rem;margin-bottom:2rem;letter-spacing:0.1em;}
+.fg{margin-bottom:1.3rem;}
+.fg label{display:block;font-size:0.78rem;color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.45rem;}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--dark3);border:1px solid rgba(212,160,23,0.25);color:var(--text);font-family:'Raleway',sans-serif;font-size:0.95rem;padding:0.75rem 1rem;border-radius:10px;outline:none;transition:border-color 0.2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg select{appearance:none;cursor:pointer;}
+.fg select option{background:var(--dark3);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.action-btn{width:100%;font-family:'Cinzel Decorative',serif;font-size:1rem;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:1rem;border-radius:50px;cursor:pointer;letter-spacing:0.1em;margin-top:0.5rem;transition:all 0.3s;}
+.action-btn:hover{box-shadow:0 4px 20px rgba(212,160,23,0.4);transform:scale(1.02);}
+.section-sep{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(212,160,23,0.25),transparent);margin:1.5rem 0;}
+.section-label{font-size:0.75rem;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:1rem;}
+
+/* PAYMENT METHODS */
+.pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;margin-bottom:1.3rem;}
+.pay-method{background:var(--dark3);border:1px solid rgba(212,160,23,0.15);border-radius:12px;padding:0.9rem 0.5rem;text-align:center;cursor:pointer;transition:all 0.25s;}
+.pay-method:hover{border-color:rgba(212,160,23,0.4);}
+.pay-method.active{border-color:var(--gold);background:rgba(212,160,23,0.08);}
+.pm-icon{font-size:1.6rem;display:block;margin-bottom:0.3rem;}
+.pm-name{font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;}
+.pay-method.active .pm-name{color:var(--gold2);}
+.pay-detail{display:none;animation:fadein 0.3s ease;}
+.pay-detail.show{display:block;}
+.upi-display{background:var(--dark3);border:1px solid rgba(212,160,23,0.25);border-radius:12px;padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.upi-id{font-size:1rem;color:var(--gold2);font-weight:600;}
+.copy-btn{background:transparent;border:1px solid rgba(212,160,23,0.3);color:var(--muted);font-size:0.75rem;padding:0.3rem 0.8rem;border-radius:20px;cursor:pointer;font-family:'Raleway',sans-serif;transition:all 0.2s;}
+.copy-btn:hover{border-color:var(--gold);color:var(--gold);}
+.transfer-note{font-size:0.8rem;color:var(--muted);line-height:1.6;background:rgba(212,160,23,0.05);border-left:2px solid var(--gold);padding:0.8rem 1rem;border-radius:0 8px 8px 0;margin-bottom:1rem;}
+.bank-details-box{background:var(--dark3);border:1px solid rgba(212,160,23,0.2);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem;display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;}
+.bank-detail-item .bd-label{font-size:0.68rem;color:var(--muted);margin-bottom:2px;}
+.bank-detail-item .bd-value{font-size:0.88rem;color:var(--gold2);}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.event-summary-box{background:var(--dark3);border:1px solid rgba(212,160,23,0.2);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;}
+.es-icon{font-size:2.2rem;}
+.es-info{flex:1;}
+.es-name{font-family:'Cinzel Decorative',serif;font-size:0.9rem;color:var(--gold2);margin-bottom:0.3rem;}
+.es-meta{font-size:0.75rem;color:var(--muted);}
+.es-price{font-size:1.1rem;font-weight:700;color:var(--gold);}
+.sell-payment-note{background:rgba(212,160,23,0.06);border:1px solid rgba(212,160,23,0.2);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.3rem;font-size:0.82rem;color:var(--muted);line-height:1.6;}
+.sell-payment-note strong{color:var(--gold2);}
+.total-row{background:var(--dark3);border-radius:10px;padding:1rem 1.2rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;}
+.total-row span:first-child{font-size:0.9rem;color:var(--muted);}
+.total-amount{font-size:1.2rem;font-weight:700;color:var(--gold);}
+
+/* PASS OVERLAY */
+.pass-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:6000;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;}
+.pass-overlay.show{display:flex;}
+.pass-box{width:100%;max-width:460px;background:var(--dark2);border:1px solid var(--gold);border-radius:20px;overflow:hidden;animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes popIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+.pass-header{background:linear-gradient(135deg,#1A0A00,#3A2200);padding:2rem;text-align:center;border-bottom:1px dashed rgba(212,160,23,0.4);}
+.pass-app-name{font-family:'Cinzel Decorative',serif;font-size:0.8rem;color:var(--gold);letter-spacing:0.4em;margin-bottom:0.8rem;}
+.pass-event-name{font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--gold2);margin-bottom:0.4rem;}
+.pass-event-cat{font-size:0.72rem;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;}
+.pass-status-badge{display:inline-block;margin-top:0.8rem;font-size:0.72rem;padding:0.3rem 1rem;border-radius:20px;letter-spacing:0.15em;}
+.pass-status-pending-badge{background:rgba(255,180,0,0.12);border:1px solid rgba(255,180,0,0.35);color:#FFB400;}
+.pass-status-confirmed-badge{background:rgba(0,200,100,0.12);border:1px solid rgba(0,200,100,0.35);color:#60EFA0;}
+.pass-body{padding:1.5rem 2rem;}
+.pass-row{display:flex;justify-content:space-between;margin-bottom:0.8rem;padding-bottom:0.8rem;border-bottom:1px solid rgba(212,160,23,0.08);}
+.pass-row:last-child{border-bottom:none;margin-bottom:0;}
+.pass-label{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;}
+.pass-value{font-size:0.88rem;color:var(--text);font-weight:500;text-align:right;}
+.pass-qr{background:var(--dark3);border:1px solid rgba(212,160,23,0.2);border-radius:12px;margin:1rem 2rem;padding:1.2rem;text-align:center;}
+.pass-qr-code{font-size:3.5rem;margin-bottom:0.4rem;}
+.pass-qr-id{font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;font-family:monospace;}
+.pass-pending-notice{margin:0 2rem 1rem;font-size:0.8rem;color:#FFB400;background:rgba(255,180,0,0.07);border:1px solid rgba(255,180,0,0.2);border-radius:10px;padding:0.8rem 1rem;line-height:1.5;text-align:center;}
+.pass-footer{padding:1rem 2rem 1.8rem;display:flex;gap:1rem;}
+.pass-download{flex:1;font-family:'Cinzel Decorative',serif;font-size:0.82rem;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:0.8rem;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+.pass-download:hover{transform:scale(1.02);}
+.pass-close{flex:1;background:transparent;border:1px solid rgba(212,160,23,0.3);color:var(--gold);font-family:'Raleway',sans-serif;font-size:0.85rem;padding:0.8rem;border-radius:30px;cursor:pointer;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:5500;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:var(--dark2);border:1px solid var(--gold);border-radius:20px;padding:2.5rem 2rem;text-align:center;max-width:380px;width:90%;animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+.modal-icon{font-size:3.5rem;margin-bottom:1rem;}
+.modal-title{font-family:'Cinzel Decorative',serif;color:var(--gold2);font-size:1.2rem;margin-bottom:0.8rem;}
+.modal-msg{color:var(--muted);font-size:0.88rem;line-height:1.7;}
+.modal-close{margin-top:1.5rem;background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Raleway',sans-serif;padding:0.6rem 2rem;border-radius:30px;cursor:pointer;font-size:0.9rem;transition:all 0.2s;}
+.modal-close:hover{background:var(--gold);color:var(--dark);}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-ring"></div><div class="splash-ring"></div>
+  <div class="splash-title">All Is One</div>
+  <div class="splash-sub">Your Universe of Events</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="genericModal">
+  <div class="modal-box">
+    <div class="modal-icon" id="modalIcon">✨</div>
+    <div class="modal-title" id="modalTitle">Done</div>
+    <div class="modal-msg" id="modalMsg"></div>
+    <button class="modal-close" onclick="closeModal()">OK</button>
+  </div>
+</div>
+
+<!-- PASS OVERLAY -->
+<div class="pass-overlay" id="passOverlay">
+  <div class="pass-box">
+    <div class="pass-header">
+      <div class="pass-app-name">ALL IS ONE</div>
+      <div class="pass-event-name" id="pass-ename"></div>
+      <div class="pass-event-cat" id="pass-ecat"></div>
+      <div class="pass-status-badge" id="pass-status-badge"></div>
+    </div>
+    <div class="pass-body">
+      <div class="pass-row"><span class="pass-label">Attendee</span><span class="pass-value" id="pass-name"></span></div>
+      <div class="pass-row"><span class="pass-label">Email</span><span class="pass-value" id="pass-email"></span></div>
+      <div class="pass-row"><span class="pass-label">Phone</span><span class="pass-value" id="pass-phone"></span></div>
+      <div class="pass-row"><span class="pass-label">Date</span><span class="pass-value" id="pass-date"></span></div>
+      <div class="pass-row"><span class="pass-label">Venue</span><span class="pass-value" id="pass-venue"></span></div>
+      <div class="pass-row"><span class="pass-label">Ticket Type</span><span class="pass-value" id="pass-ticket"></span></div>
+      <div class="pass-row"><span class="pass-label">Amount Paid</span><span class="pass-value" id="pass-paid"></span></div>
+      <div class="pass-row"><span class="pass-label">Payment Via</span><span class="pass-value" id="pass-paymethod"></span></div>
+    </div>
+    <div class="pass-pending-notice" id="pass-pending-notice">⏳ Your pass is pending seller approval. Check <strong>My Tickets</strong> once the seller confirms your payment.</div>
+    <div class="pass-qr">
+      <div class="pass-qr-code">🎫</div>
+      <div class="pass-qr-id" id="pass-id"></div>
+    </div>
+    <div class="pass-footer">
+      <button class="pass-download" id="pass-dl-btn" onclick="downloadPassFromOverlay()">⬇ Save Pass</button>
+      <button class="pass-close" onclick="closePassOverlay()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-panel-header">
+    <div class="notif-panel-title">🔔 Notifications</div>
+    <button class="notif-panel-close" onclick="toggleNotifPanel()">✕</button>
+  </div>
+  <div class="notif-list" id="notifList"></div>
+</div>
+
+<!-- USER BAR -->
+<div class="user-bar" id="userBar">
+  <button class="notif-btn" onclick="toggleNotifPanel()">
+    🔔
+    <div class="notif-badge" id="notifBadge">0</div>
+  </button>
+  <div class="user-name-badge" id="userBadge">👤 Guest</div>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<!-- AUTH PAGE -->
+<div id="auth-page">
+  <div class="auth-box">
+    <div class="auth-logo">All Is One</div>
+    <div class="auth-tagline">Your Universe of Events</div>
+    <div class="auth-divider"></div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tab-login" onclick="switchTab('login')">Login</div>
+      <div class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</div>
+    </div>
+    <div class="auth-form active" id="form-login">
+      <div class="fg"><label>Email Address</label><input type="email" id="l-email" placeholder="you@example.com"/></div>
+      <div class="fg"><label>Password</label><div class="pass-wrap"><input type="password" id="l-pass" placeholder="Enter your password"/><span class="pass-eye" onclick="togglePass('l-pass',this)">👁️</span></div></div>
+      <div class="forgot"><span onclick="forgotPass()">Forgot password?</span></div>
+      <button class="auth-submit" onclick="doLogin()">✨ Login</button>
+      <div class="auth-msg error" id="login-err"></div>
+      <div class="auth-switch">No account? <span onclick="switchTab('signup')">Sign up free</span></div>
+    </div>
+    <div class="auth-form" id="form-signup">
+      <div class="fg"><label>Full Name</label><input type="text" id="s-name" placeholder="Your full name"/></div>
+      <div class="fg"><label>Email Address</label><input type="email" id="s-email" placeholder="you@example.com"/></div>
+      <div class="fg"><label>Password</label><div class="pass-wrap"><input type="password" id="s-pass" placeholder="Min 6 characters"/><span class="pass-eye" onclick="togglePass('s-pass',this)">👁️</span></div></div>
+      <div class="fg"><label>Confirm Password</label><div class="pass-wrap"><input type="password" id="s-pass2" placeholder="Repeat password"/><span class="pass-eye" onclick="togglePass('s-pass2',this)">👁️</span></div></div>
+      <button class="auth-submit" onclick="doSignup()">🚀 Create Account</button>
+      <div class="auth-msg error" id="signup-err"></div>
+      <div class="auth-msg success" id="signup-ok"></div>
+      <div class="auth-switch">Have an account? <span onclick="switchTab('login')">Login</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" style="display:none;">
+<header>
+  <div class="logo">All Is One</div>
+  <div class="tagline">Your Universe of Events</div>
+  <div class="divider"></div>
+</header>
+
+<!-- HOME -->
+<div id="home-page" class="page active">
+  <div class="headline">All In One</div>
+  <div class="sub-headline">Discover · Attend · Celebrate</div>
+  <div class="city-bar">
+    <label>📍 Select City</label>
+    <select class="city-select" id="cityFilter">
+      <option value="all">All Cities</option>
+      <option>Mumbai</option><option>Delhi</option><option>Bangalore</option>
+      <option>Hyderabad</option><option>Chennai</option><option>Kolkata</option>
+      <option>Pune</option><option>Ahmedabad</option><option>Indore</option>
+      <option>Jaipur</option><option>Lucknow</option><option>Chandigarh</option>
+    </select>
+  </div>
+  <div class="categories">
+    <div class="cat-card holy" onclick="showEvents('holy')"><span class="cat-badge">SACRED</span><span class="cat-icon">🕉️</span><div class="cat-name">Holy Events</div><div class="cat-desc">Religious gatherings, yatras & spiritual festivals</div></div>
+    <div class="cat-card college" onclick="showEvents('college')"><span class="cat-badge">CAMPUS</span><span class="cat-icon">🎓</span><div class="cat-name">College Events</div><div class="cat-desc">Fests, competitions, seminars & campus shows</div></div>
+    <div class="cat-card celeb" onclick="showEvents('celeb')"><span class="cat-badge">LIVE</span><span class="cat-icon">🎤</span><div class="cat-name">Celebrity Concerts</div><div class="cat-desc">Live shows, tours & star-studded performances</div></div>
+  </div>
+  <div class="sell-wrap"><button class="sell-btn" onclick="showPage('register')">🎟️ Sell / List Your Event</button></div>
+  <div class="my-tickets-wrap"><button class="my-tickets-btn" onclick="showMyTickets()">🎫 My Tickets</button></div>
+</div>
+
+<!-- CATEGORY PAGES -->
+<div id="holy-page" class="page">
+  <button class="back-btn" onclick="showPage('home')">← Back</button>
+  <div class="page-title">🕉️ Holy Events</div>
+  <div class="page-sub" id="holy-sub"></div>
+  <div class="events-grid" id="holy-events"></div>
+</div>
+<div id="college-page" class="page">
+  <button class="back-btn" onclick="showPage('home')">← Back</button>
+  <div class="page-title">🎓 College Events</div>
+  <div class="page-sub" id="college-sub"></div>
+  <div class="events-grid" id="college-events"></div>
+</div>
+<div id="celeb-page" class="page">
+  <button class="back-btn" onclick="showPage('home')">← Back</button>
+  <div class="page-title">🎤 Celebrity Concerts</div>
+  <div class="page-sub" id="celeb-sub"></div>
+  <div class="events-grid" id="celeb-events"></div>
+</div>
+
+<!-- BUY PAGE -->
+<div id="buy-page" class="page">
+  <button class="back-btn" id="buy-back-btn">← Back</button>
+  <div class="page-title">🎟️ Book Your Ticket</div>
+  <div class="page-sub">Fill your details and complete payment</div>
+  <div class="form-wrap">
+    <div class="form-card">
+      <div id="buy-event-summary"></div>
+      <div class="section-label">👤 Your Details</div>
+      <div class="fg"><label>Full Name</label><input type="text" id="b-name" placeholder="As on ID proof"/></div>
+      <div class="form-row">
+        <div class="fg"><label>Email</label><input type="email" id="b-email" placeholder="you@email.com"/></div>
+        <div class="fg"><label>Phone</label><input type="tel" id="b-phone" placeholder="10-digit number"/></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>Age</label><input type="number" id="b-age" placeholder="e.g. 22"/></div>
+        <div class="fg"><label>Ticket Type</label>
+          <select id="b-ticket">
+            <option value="General">General</option>
+            <option value="VIP">VIP (+50%)</option>
+            <option value="VVIP">VVIP (+100%)</option>
+            <option value="Student">Student (-20%)</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label>Your City</label><input type="text" id="b-address" placeholder="Your city"/></div>
+      <div class="section-sep"></div>
+      <div class="section-label">💳 Payment Method</div>
+      <div class="pay-methods">
+        <div class="pay-method active" id="pm-upi" onclick="selectPay('upi')"><span class="pm-icon">📱</span><span class="pm-name">UPI</span></div>
+        <div class="pay-method" id="pm-card" onclick="selectPay('card')"><span class="pm-icon">💳</span><span class="pm-name">Card</span></div>
+        <div class="pay-method" id="pm-transfer" onclick="selectPay('transfer')"><span class="pm-icon">🏦</span><span class="pm-name">Bank Transfer</span></div>
+      </div>
+      <div class="pay-detail show" id="pd-upi">
+        <div class="transfer-note">Copy the seller's UPI ID, transfer the amount, then enter your Transaction ID below.</div>
+        <div class="upi-display">
+          <div><div style="font-size:0.68rem;color:var(--muted);margin-bottom:4px;">Seller UPI ID</div><div class="upi-id" id="show-upi-id">seller@upi</div></div>
+          <button class="copy-btn" onclick="copyUPI()">📋 Copy</button>
+        </div>
+        <div class="fg"><label>Your UTR / Transaction ID</label><input type="text" id="b-utr" placeholder="e.g. 123456789012"/></div>
+      </div>
+      <div class="pay-detail" id="pd-card">
+        <div class="fg"><label>Cardholder Name</label><input type="text" id="b-cname" placeholder="Name on card"/></div>
+        <div class="fg"><label>Card Number</label><input type="text" id="b-cnum" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" oninput="fmtCard(this)"/></div>
+        <div class="card-grid">
+          <div class="fg"><label>Expiry (MM/YY)</label><input type="text" id="b-cexp" placeholder="MM/YY" maxlength="5"/></div>
+          <div class="fg"><label>CVV</label><input type="password" id="b-ccvv" placeholder="•••" maxlength="3"/></div>
+        </div>
+      </div>
+      <div class="pay-detail" id="pd-transfer">
+        <div class="transfer-note">Transfer the amount to the seller's bank account below, then enter your Transaction Reference ID.</div>
+        <div class="bank-details-box">
+          <div class="bank-detail-item"><div class="bd-label">Account Name</div><div class="bd-value" id="show-acc-name">—</div></div>
+          <div class="bank-detail-item"><div class="bd-label">Account No.</div><div class="bd-value" id="show-acc-no">—</div></div>
+          <div class="bank-detail-item"><div class="bd-label">IFSC Code</div><div class="bd-value" id="show-ifsc">—</div></div>
+          <div class="bank-detail-item"><div class="bd-label">Bank Name</div><div class="bd-value" id="show-bank">—</div></div>
+        </div>
+        <div class="fg"><label>Transaction Reference ID</label><input type="text" id="b-txnref" placeholder="e.g. TXN123456789"/></div>
+      </div>
+      <div class="section-sep"></div>
+      <div class="total-row"><span>Total Payable</span><span class="total-amount" id="total-payable">₹0</span></div>
+      <button class="action-btn" onclick="confirmPurchase()">✨ Confirm & Submit Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- MY TICKETS PAGE -->
+<div id="mytickets-page" class="page">
+  <button class="back-btn" onclick="showPage('home')">← Back</button>
+  <div class="page-title">🎫 My Tickets</div>
+  <div class="page-sub">Your purchased passes</div>
+  <div class="tickets-grid" id="myTicketsGrid"></div>
+</div>
+
+<!-- SELL / REGISTER PAGE -->
+<div id="register-page" class="page">
+  <button class="back-btn" onclick="showPage('home')">← Back</button>
+  <div class="page-title">🎟️ List Your Event</div>
+  <div class="page-sub">Fill in your event details below</div>
+  <div class="form-wrap">
+    <div class="form-card">
+      <div class="form-card-title">Event Details</div>
+      <div class="form-card-sub">All fields required · Your event goes live instantly</div>
+      <div class="fg"><label>Concert / Event Name</label><input type="text" id="r-name" placeholder="e.g. Navratri Mahotsav 2025"/></div>
+      <div class="form-row">
+        <div class="fg"><label>Category</label><select id="r-cat"><option value="">-- Choose --</option><option value="holy">🕉️ Holy Event</option><option value="college">🎓 College Event</option><option value="celeb">🎤 Celebrity Concert</option></select></div>
+        <div class="fg"><label>City</label><select id="r-city"><option value="">-- Select City --</option><option>Mumbai</option><option>Delhi</option><option>Bangalore</option><option>Hyderabad</option><option>Chennai</option><option>Kolkata</option><option>Pune</option><option>Ahmedabad</option><option>Indore</option><option>Jaipur</option><option>Lucknow</option><option>Chandigarh</option></select></div>
+      </div>
+      <div class="fg"><label>Venue / Location</label><input type="text" id="r-location" placeholder="e.g. BSNL Ground, Indore"/></div>
+      <div class="form-row">
+        <div class="fg"><label>Date</label><input type="date" id="r-date"/></div>
+        <div class="fg"><label>Ticket Price (₹)</label><input type="number" id="r-price" placeholder="0 for free"/></div>
+      </div>
+      <div class="fg"><label>Total Seats Available</label><input type="number" id="r-seats" placeholder="e.g. 500"/></div>
+      <div class="fg"><label>Short Description</label><textarea id="r-desc" rows="3" placeholder="What makes this event special..."></textarea></div>
+      <div class="fg"><label>Organizer Name</label><input type="text" id="r-org" placeholder="Your name or organization"/></div>
+      <div class="section-sep"></div>
+      <div class="section-label">💰 Your Payment Details (Buyers will pay you directly)</div>
+      <div class="sell-payment-note"><strong>How you'll receive payments:</strong> Buyers transfer money directly to your UPI or bank account. Provide at least one option.</div>
+      <div class="fg"><label>Your UPI ID</label><input type="text" id="r-upi" placeholder="e.g. yourname@paytm or @gpay"/></div>
+      <div class="fg"><label>Account Holder Name</label><input type="text" id="r-acc-name" placeholder="Name as in bank"/></div>
+      <div class="form-row">
+        <div class="fg"><label>Account Number</label><input type="text" id="r-acc-no" placeholder="Bank account number"/></div>
+        <div class="fg"><label>IFSC Code</label><input type="text" id="r-ifsc" placeholder="e.g. SBIN0001234"/></div>
+      </div>
+      <div class="fg"><label>Bank Name</label><input type="text" id="r-bank" placeholder="e.g. SBI, HDFC, ICICI"/></div>
+      <button class="action-btn" onclick="submitEvent()">✨ Publish Event</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// Stars
+const starsEl=document.getElementById('stars');
+for(let i=0;i<120;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s;opacity:${0.1+Math.random()*0.9}`;starsEl.appendChild(s);}
+
+// ==================== AUTH ====================
+let users=[], currentUser=null;
+function switchTab(t){['login','signup'].forEach(x=>{document.getElementById('tab-'+x).classList.toggle('active',x===t);document.getElementById('form-'+x).classList.toggle('active',x===t);});['login-err','signup-err','signup-ok'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});}
+function togglePass(id,eye){const inp=document.getElementById(id);inp.type=inp.type==='password'?'text':'password';eye.textContent=inp.type==='password'?'👁️':'🙈';}
+function doLogin(){
+  const email=document.getElementById('l-email').value.trim().toLowerCase(),pass=document.getElementById('l-pass').value;
+  const err=document.getElementById('login-err');err.textContent='';
+  if(!email||!pass){err.textContent='Please fill all fields.';return;}
+  const user=users.find(u=>u.email===email&&u.pass===pass);
+  if(!user){err.textContent='Invalid email or password.';return;}
+  loginSuccess(user);
+}
+function doSignup(){
+  const name=document.getElementById('s-name').value.trim(),email=document.getElementById('s-email').value.trim().toLowerCase(),pass=document.getElementById('s-pass').value,pass2=document.getElementById('s-pass2').value;
+  const err=document.getElementById('signup-err'),ok=document.getElementById('signup-ok');err.textContent='';ok.textContent='';
+  if(!name||!email||!pass||!pass2){err.textContent='Please fill all fields.';return;}
+  if(!/\S+@\S+\.\S+/.test(email)){err.textContent='Enter a valid email.';return;}
+  if(pass.length<6){err.textContent='Password must be at least 6 characters.';return;}
+  if(pass!==pass2){err.textContent='Passwords do not match.';return;}
+  if(users.find(u=>u.email===email)){err.textContent='Email already registered.';return;}
+  users.push({name,email,pass});ok.textContent='Account created! Logging you in... ✅';
+  setTimeout(()=>loginSuccess({name,email,pass}),1000);
+}
+function forgotPass(){const email=document.getElementById('l-email').value.trim();const err=document.getElementById('login-err');if(!email){err.style.color='#FF8080';err.textContent='Enter your email above first.';return;}err.style.color='#80FFB0';err.textContent='Reset link sent to '+email+' ✅';}
+function loginSuccess(user){
+  currentUser=user;
+  document.getElementById('auth-page').classList.add('hide');
+  const splash=document.getElementById('splash');splash.classList.add('show');
+  setTimeout(()=>{splash.classList.remove('show');document.getElementById('app').style.display='block';document.getElementById('userBadge').textContent='👤 '+user.name;document.getElementById('userBar').classList.add('show');refreshNotifBadge();},2200);
+}
+function logout(){currentUser=null;document.getElementById('app').style.display='none';document.getElementById('userBar').classList.remove('show');document.getElementById('auth-page').classList.remove('hide');['l-email','l-pass','s-name','s-email','s-pass','s-pass2'].forEach(id=>document.getElementById(id).value='');document.getElementById('login-err').textContent='';document.getElementById('login-err').style.color='#FF8080';document.getElementById('signup-err').textContent='';document.getElementById('signup-ok').textContent='';closeNotifPanel();showPage('home');}
+document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(document.getElementById('auth-page').classList.contains('hide'))return;const isLogin=document.getElementById('form-login').classList.contains('active');if(isLogin)doLogin();else doSignup();});
+
+// ==================== DATA ====================
+let events=[
+  {name:'Navratri Mahotsav',cat:'holy',city:'Indore',location:'Nehru Stadium, Indore',date:'2025-10-02',price:0,seats:500,desc:'9 days of divine celebration with garba & aarti.',org:'Shri Navratri Samiti',orgEmail:'navratri@aio',upi:'navratri@paytm',accName:'Navratri Samiti',accNo:'1234567890',ifsc:'SBIN0001111',bank:'SBI'},
+  {name:'Ganesh Utsav Grand',cat:'holy',city:'Mumbai',location:'Girgaon Chowpatty',date:'2025-09-15',price:0,seats:1000,desc:'Grand procession and cultural programs.',org:'Lokmanya Trust',orgEmail:'lokmanya@aio',upi:'lokmanya@upi',accName:'Lokmanya Trust',accNo:'9876543210',ifsc:'HDFC0002222',bank:'HDFC'},
+  {name:'Kashi Yatra',cat:'holy',city:'Jaipur',location:'Dashashwamedh Ghat',date:'2025-11-10',price:200,seats:150,desc:'Sacred boat tour and evening aarti at Ganga.',org:'Kashi Paryatan',orgEmail:'kashi@aio',upi:'kashi@gpay',accName:'Kashi Paryatan',accNo:'1122334455',ifsc:'ICIC0003333',bank:'ICICI'},
+  {name:'TechFest IITB',cat:'college',city:'Mumbai',location:'IIT Bombay Campus',date:'2025-12-18',price:150,seats:2000,desc:"Asia's largest science & tech festival.",org:'IIT Bombay',orgEmail:'techfest@aio',upi:'techfest@iitb',accName:'TechFest IIT Bombay',accNo:'5566778899',ifsc:'SBIN0004444',bank:'SBI'},
+  {name:'Spandan Cultural Fest',cat:'college',city:'Indore',location:'IIM Indore Campus',date:'2025-10-20',price:100,seats:800,desc:'Music, drama, fashion & competitions.',org:'IIM Indore Students',orgEmail:'spandan@aio',upi:'spandan@paytm',accName:'Spandan IIM Indore',accNo:'6677889900',ifsc:'KOTAK0005555',bank:'Kotak'},
+  {name:'Confluence 2025',cat:'college',city:'Delhi',location:'SRCC, Delhi University',date:'2025-09-28',price:80,seats:600,desc:'Annual business festival with top speakers.',org:'SRCC',orgEmail:'srcc@aio',upi:'confluence@upi',accName:'SRCC Events',accNo:'4433221100',ifsc:'HDFC0006666',bank:'HDFC'},
+  {name:'Arijit Singh Live',cat:'celeb',city:'Mumbai',location:'MMRDA Grounds, BKC',date:'2025-12-05',price:1500,seats:5000,desc:'The most awaited live concert of the year.',org:'BookMyShow Live',orgEmail:'bms@aio',upi:'bms@razorpay',accName:'BookMyShow Events',accNo:'1234509876',ifsc:'ICIC0007777',bank:'ICICI'},
+  {name:'AP Dhillon Tour',cat:'celeb',city:'Delhi',location:'Jawaharlal Nehru Stadium',date:'2025-11-22',price:2000,seats:4000,desc:'Exclusive India stop on the world tour.',org:'Live Nation India',orgEmail:'livenation@aio',upi:'livenation@gpay',accName:'Live Nation India',accNo:'9876501234',ifsc:'AXIS0008888',bank:'Axis'},
+  {name:'Diljit Dosanjh Dil-Luminati',cat:'celeb',city:'Bangalore',location:'Palace Grounds',date:'2025-10-30',price:2500,seats:6000,desc:'The blockbuster tour returns to India.',org:'Diljit World Tours',orgEmail:'diljit@aio',upi:'diljit@paytm',accName:'DWT Productions',accNo:'5544332211',ifsc:'SBIN0009999',bank:'SBI'},
+];
+
+// orders: {id, eventIdx, buyerEmail, buyerName, phone, ticket, paid, paymethod, payref, date, venue, city, cat, eventName, status:'pending'|'confirmed'|'rejected', ts}
+let orders=[];
+// notifications: {id, forOrgEmail, orderId, read, ts}
+let notifications=[];
+
+const catEmoji={holy:'🕉️',college:'🎓',celeb:'🎤'};
+const catBg={holy:'holy-bg',college:'college-bg',celeb:'celeb-bg'};
+const catNames={holy:'Holy Event',college:'College Event',celeb:'Celebrity Concert'};
+let currentEventIndex=null, currentCat=null, lastPassOrderId=null;
+
+// ==================== PAGE NAV ====================
+function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(name+'-page').classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+
+// ==================== EVENTS ====================
+function showEvents(cat){
+  currentCat=cat;
+  const city=document.getElementById('cityFilter').value;
+  let filtered=events.map((e,i)=>({...e,_idx:i})).filter(e=>e.cat===cat);
+  if(city!=='all')filtered=filtered.filter(e=>e.city===city);
+  const cityLabel=city==='all'?'All Cities':city;
+  const subMap={holy:'Sacred gatherings & spiritual festivals',college:'Campus fests & competitions',celeb:'Live shows & performances'};
+  document.getElementById(cat+'-sub').textContent=subMap[cat]+' · '+cityLabel;
+  const grid=document.getElementById(cat+'-events');
+  if(filtered.length===0){grid.innerHTML=`<div class="no-events"><div class="big-icon">🔍</div><p>No events in <strong>${cityLabel}</strong> yet.<br>Be the first to list one!</p></div>`;
+  }else{
+    grid.innerHTML=filtered.map(e=>{
+      const price=e.price==0?'Free':'₹'+Number(e.price).toLocaleString();
+      const d=new Date(e.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+      const btnClass=e.price==0?'buy-btn free':'buy-btn';
+      const btnLabel=e.price==0?'🎫 Register Free':'🛒 Buy Ticket';
+      return `<div class="event-card"><div class="event-card-top ${catBg[cat]}">${catEmoji[cat]}<div class="seats-badge">🪑 ${e.seats}</div></div><div class="event-body"><div class="event-name">${e.name}</div><div class="event-meta"><span>📅 ${d}</span><span>📍 ${e.location}</span><span>🏙️ ${e.city}</span><span>🎪 ${e.org}</span><span style="font-size:0.75rem;margin-top:3px;">${e.desc}</span></div><div class="event-footer"><div class="event-price-tag">${price}</div><button class="${btnClass}" onclick="openBuy(${e._idx},'${cat}')">${btnLabel}</button></div></div></div>`;
+    }).join('');
+  }
+  showPage(cat);
+}
+
+// ==================== BUY ====================
+function openBuy(idx,cat){
+  currentEventIndex=idx;currentCat=cat;
+  const e=events[idx];
+  const d=new Date(e.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  const price=e.price==0?'Free Entry':'₹'+Number(e.price).toLocaleString();
+  document.getElementById('buy-event-summary').innerHTML=`<div class="event-summary-box"><div class="es-icon">${catEmoji[cat]}</div><div class="es-info"><div class="es-name">${e.name}</div><div class="es-meta">📅 ${d} &nbsp;|&nbsp; 📍 ${e.location} &nbsp;|&nbsp; 🏙️ ${e.city}</div></div><div class="es-price">${price}</div></div>`;
+  if(currentUser){document.getElementById('b-name').value=currentUser.name||'';document.getElementById('b-email').value=currentUser.email||'';}
+  document.getElementById('show-upi-id').textContent=e.upi||'N/A';
+  document.getElementById('show-acc-name').textContent=e.accName||'N/A';
+  document.getElementById('show-acc-no').textContent=e.accNo||'N/A';
+  document.getElementById('show-ifsc').textContent=e.ifsc||'N/A';
+  document.getElementById('show-bank').textContent=e.bank||'N/A';
+  selectPay('upi');updateTotal();
+  document.getElementById('buy-back-btn').onclick=()=>showPage(cat);
+  document.getElementById('b-ticket').onchange=updateTotal;
+  showPage('buy');
+}
+function fmtCard(inp){let v=inp.value.replace(/\D/g,'').slice(0,16);inp.value=v.match(/.{1,4}/g)?.join(' ')||v;}
+function updateTotal(){
+  const e=events[currentEventIndex];if(!e)return;
+  const base=Number(e.price);const ticket=document.getElementById('b-ticket').value;
+  let mult=1;if(ticket==='VIP')mult=1.5;else if(ticket==='VVIP')mult=2;else if(ticket==='Student')mult=0.8;
+  const total=Math.round(base*mult);
+  document.getElementById('total-payable').textContent=total===0?'Free':'₹'+total.toLocaleString();
+}
+function selectPay(method){
+  ['upi','card','transfer'].forEach(m=>{document.getElementById('pm-'+m).classList.toggle('active',m===method);document.getElementById('pd-'+m).classList.toggle('show',m===method);});
+}
+function copyUPI(){const upi=document.getElementById('show-upi-id').textContent;navigator.clipboard.writeText(upi).catch(()=>{});showModal('📋','Copied!','UPI ID copied to clipboard.');}
+
+function confirmPurchase(){
+  const name=document.getElementById('b-name').value.trim();
+  const email=document.getElementById('b-email').value.trim();
+  const phone=document.getElementById('b-phone').value.trim();
+  const age=document.getElementById('b-age').value.trim();
+  const ticket=document.getElementById('b-ticket').value;
+  const address=document.getElementById('b-address').value.trim();
+  if(!name||!email||!phone||!age||!address){showModal('⚠️','Missing Details','Please fill all your personal details.');return;}
+  if(!/^\d{10}$/.test(phone)){showModal('⚠️','Invalid Phone','Enter a valid 10-digit phone number.');return;}
+
+  const method=['upi','card','transfer'].find(m=>document.getElementById('pm-'+m).classList.contains('active'));
+  let payRef='',payLabel='';
+  if(method==='upi'){payRef=document.getElementById('b-utr').value.trim();payLabel='UPI';if(!payRef){showModal('⚠️','Missing UTR','Enter your UPI UTR / Transaction ID after making payment.');return;}}
+  else if(method==='card'){const cname=document.getElementById('b-cname').value.trim(),cnum=document.getElementById('b-cnum').value.replace(/\s/g,''),cexp=document.getElementById('b-cexp').value.trim(),ccvv=document.getElementById('b-ccvv').value.trim();if(!cname||!cnum||!cexp||!ccvv){showModal('⚠️','Card Details','Please fill all card details.');return;}if(cnum.length<16){showModal('⚠️','Invalid Card','Enter a valid 16-digit card number.');return;}payRef='CARD-'+cnum.slice(-4);payLabel='Credit/Debit Card';}
+  else{payRef=document.getElementById('b-txnref').value.trim();payLabel='Bank Transfer';if(!payRef){showModal('⚠️','Missing Reference','Enter the transaction reference ID after bank transfer.');return;}}
+
+  const e=events[currentEventIndex];
+  const base=Number(e.price);const ticket2=document.getElementById('b-ticket').value;
+  let mult=1;if(ticket2==='VIP')mult=1.5;else if(ticket2==='VVIP')mult=2;else if(ticket2==='Student')mult=0.8;
+  const total=Math.round(base*mult);
+  const d=new Date(e.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  const passId='AIO-'+Date.now().toString(36).toUpperCase();
+
+  // Create order
+  const order={id:passId,eventIdx:currentEventIndex,buyerEmail:email,buyerName:name,phone,ticket:ticket2,paid:total,paymethod:payLabel,payref:payRef,date:d,venue:e.location,city:e.city,cat:currentCat,eventName:e.name,status:'pending',ts:Date.now()};
+  orders.push(order);
+  lastPassOrderId=passId;
+
+  // Create notification for seller (matched by orgEmail or org name)
+  const notif={id:'N-'+Date.now(),forOrgEmail:e.orgEmail,forOrg:e.org,orderId:passId,buyerName:name,eventName:e.name,paid:total,paymethod:payLabel,payref:payRef,read:false,ts:Date.now()};
+  notifications.push(notif);
+
+  // If logged-in user is the seller of this event, refresh badge
+  refreshNotifBadge();
+
+  // Show pass overlay (pending)
+  showPassOverlay(order);
+}
+
+function showPassOverlay(order){
+  document.getElementById('pass-ename').textContent=order.eventName;
+  document.getElementById('pass-ecat').textContent=catNames[order.cat];
+  document.getElementById('pass-name').textContent=order.buyerName;
+  document.getElementById('pass-email').textContent=order.buyerEmail;
+  document.getElementById('pass-phone').textContent=order.phone;
+  document.getElementById('pass-date').textContent=order.date;
+  document.getElementById('pass-venue').textContent=order.venue;
+  document.getElementById('pass-ticket').textContent=order.ticket;
+  document.getElementById('pass-paid').textContent=order.paid===0?'Free':'₹'+Number(order.paid).toLocaleString();
+  document.getElementById('pass-paymethod').textContent=order.paymethod;
+  document.getElementById('pass-id').textContent=order.id;
+  const isPending=order.status==='pending';
+  const badge=document.getElementById('pass-status-badge');
+  badge.textContent=isPending?'⏳ PENDING APPROVAL':'✓ CONFIRMED';
+  badge.className='pass-status-badge '+(isPending?'pass-status-pending-badge':'pass-status-confirmed-badge');
+  document.getElementById('pass-pending-notice').style.display=isPending?'block':'none';
+  document.getElementById('pass-dl-btn').style.display=isPending?'none':'block';
+  document.getElementById('passOverlay').classList.add('show');
+}
+
+function closePassOverlay(){document.getElementById('passOverlay').classList.remove('show');showPage('home');}
+
+function downloadPassFromOverlay(){
+  const orderId=document.getElementById('pass-id').textContent;
+  const order=orders.find(o=>o.id===orderId);
+  if(order)downloadPass(order);
+}
+
+function downloadPass(order){
+  const content=`ALL IS ONE — EVENT PASS\n========================\nPass ID  : ${order.id}\nStatus   : ${order.status.toUpperCase()}\nEvent    : ${order.eventName}\nAttendee : ${order.buyerName}\nEmail    : ${order.buyerEmail}\nPhone    : ${order.phone}\nDate     : ${order.date}\nVenue    : ${order.venue}\nCity     : ${order.city}\nTicket   : ${order.ticket}\nPaid     : ${order.paid===0?'Free':'₹'+Number(order.paid).toLocaleString()}\nPayment  : ${order.paymethod}\n========================\nPresent this pass at the entry gate.`;
+  const blob=new Blob([content],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`pass-${order.id}.txt`;a.click();
+}
+
+// ==================== MY TICKETS ====================
+function showMyTickets(){
+  if(!currentUser){showModal('⚠️','Login Required','Please login to view your tickets.');return;}
+  const myOrders=orders.filter(o=>o.buyerEmail===currentUser.email);
+  const grid=document.getElementById('myTicketsGrid');
+  if(myOrders.length===0){
+    grid.innerHTML=`<div class="no-tickets"><div class="big-icon">🎫</div><p>No tickets yet.<br>Browse events and buy your first ticket!</p></div>`;
+  }else{
+    grid.innerHTML=myOrders.map(o=>{
+      const statusTag=o.status==='confirmed'?`<span class="ticket-status-confirmed">✓ CONFIRMED</span>`:o.status==='rejected'?`<span class="ticket-status-rejected">✗ REJECTED</span>`:`<span class="ticket-status-pending">⏳ PENDING</span>`;
+      const pendingMsg=o.status==='pending'?`<div class="ticket-pending-msg">⏳ Awaiting seller approval. The seller will verify your payment and issue your pass shortly.</div>`:'';
+      const dlBtn=o.status==='confirmed'?`<button class="ticket-download-btn" onclick="downloadPass(orders.find(x=>x.id==='${o.id}'))">⬇ Download Confirmed Pass</button>`:``;
+      const viewBtn=`<button class="ticket-download-btn" style="margin-bottom:0.5rem;background:var(--dark3);color:var(--gold);border:1px solid rgba(212,160,23,0.3);" onclick="showPassOverlay(orders.find(x=>x.id==='${o.id}'))">👁 View Pass</button>`;
+      return `<div class="ticket-card"><div class="ticket-card-header"><div class="ticket-card-name">${catEmoji[o.cat]} ${o.eventName}</div>${statusTag}</div><div class="ticket-card-body"><div class="ticket-meta"><span>📅 ${o.date}</span><span>📍 ${o.venue}</span><span>🏷️ ${o.ticket}</span><span>💰 ${o.paid===0?'Free':'₹'+Number(o.paid).toLocaleString()}</span><span>💳 ${o.paymethod}</span></div>${pendingMsg}${viewBtn}${dlBtn}</div></div>`;
+    }).join('');
+  }
+  showPage('mytickets');
+}
+
+// ==================== NOTIFICATIONS (SELLER) ====================
+function refreshNotifBadge(){
+  if(!currentUser)return;
+  // Find notifications for events this user listed (match by orgEmail = currentUser.email, or org name)
+  const myNotifs=notifications.filter(n=>n.forOrgEmail===currentUser.email&&!n.read);
+  const badge=document.getElementById('notifBadge');
+  badge.textContent=myNotifs.length;
+  badge.classList.toggle('show',myNotifs.length>0);
+}
+
+function toggleNotifPanel(){
+  const panel=document.getElementById('notifPanel');
+  const isShowing=panel.classList.contains('show');
+  if(isShowing){panel.classList.remove('show');return;}
+  renderNotifPanel();
+  panel.classList.add('show');
+}
+function closeNotifPanel(){document.getElementById('notifPanel').classList.remove('show');}
+
+function renderNotifPanel(){
+  if(!currentUser)return;
+  // Show notifications for events this user listed
+  const myNotifs=notifications.filter(n=>n.forOrgEmail===currentUser.email).sort((a,b)=>b.ts-a.ts);
+  const list=document.getElementById('notifList');
+  if(myNotifs.length===0){list.innerHTML=`<div class="notif-empty">🔔 No notifications yet.<br>When someone buys your event ticket, you'll see it here.</div>`;return;}
+  list.innerHTML=myNotifs.map(n=>{
+    const order=orders.find(o=>o.id===n.orderId);
+    const time=new Date(n.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    const dateStr=new Date(n.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+    let actionsHtml='';
+    if(order&&order.status==='pending'){
+      actionsHtml=`<div class="notif-actions"><button class="notif-approve" onclick="approveOrder('${n.orderId}','${n.id}')">✓ Issue Pass</button><button class="notif-reject" onclick="rejectOrder('${n.orderId}','${n.id}')">✗ Reject</button></div>`;
+    }else if(order&&order.status==='confirmed'){
+      actionsHtml=`<div class="notif-actions"><span class="notif-approved-tag">✓ Pass Issued</span></div>`;
+    }else if(order&&order.status==='rejected'){
+      actionsHtml=`<div class="notif-actions"><span class="notif-rejected-tag">✗ Rejected</span></div>`;
+    }
+    return `<div class="notif-item ${n.read?'':'unread'}">
+      <div class="notif-item-top"><div class="notif-item-title">🛒 New Ticket Order</div><div class="notif-item-time">${dateStr} ${time}</div></div>
+      <div class="notif-item-msg"><strong>${n.buyerName}</strong> purchased a ticket for <strong>${n.eventName}</strong>.<br>
+      Amount: ${n.paid===0?'Free':'₹'+Number(n.paid).toLocaleString()} &nbsp;|&nbsp; Via: ${n.paymethod}<br>
+      Ref: <span style="font-family:monospace;color:var(--gold2);font-size:0.75rem;">${n.payref}</span></div>
+      ${actionsHtml}
+    </div>`;
+  }).join('');
+  // Mark as read
+  myNotifs.forEach(n=>n.read=true);
+  refreshNotifBadge();
+}
+
+function approveOrder(orderId,notifId){
+  const order=orders.find(o=>o.id===orderId);
+  if(order){
+    order.status='confirmed';
+    renderNotifPanel();
+    refreshNotifBadge();
+    showModal('✅','Pass Issued!',`The pass for ${order.buyerName} has been confirmed. They can now download their ticket from My Tickets.`);
+  }
+}
+
+function rejectOrder(orderId,notifId){
+  const order=orders.find(o=>o.id===orderId);
+  if(order){
+    order.status='rejected';
+    renderNotifPanel();
+    refreshNotifBadge();
+    showModal('❌','Order Rejected',`The order for ${order.buyerName} has been rejected. The buyer will see the rejection status in My Tickets.`);
+  }
+}
+
+// ==================== SELL ====================
+function submitEvent(){
+  const v=id=>document.getElementById(id).value;
+  const name=v('r-name').trim(),cat=v('r-cat'),city=v('r-city'),location=v('r-location').trim(),date=v('r-date'),price=v('r-price'),seats=v('r-seats'),desc=v('r-desc').trim(),org=v('r-org').trim(),upi=v('r-upi').trim(),accName=v('r-acc-name').trim(),accNo=v('r-acc-no').trim(),ifsc=v('r-ifsc').trim(),bank=v('r-bank').trim();
+  if(!name||!cat||!city||!location||!date||price===''||!seats||!desc||!org){showModal('⚠️','Incomplete','Please fill all event details.');return;}
+  if(!upi&&!accNo){showModal('⚠️','Payment Setup','Add at least one payment method (UPI or Bank Account).');return;}
+  events.push({name,cat,city,location,date,price:Number(price),seats:Number(seats),desc,org,orgEmail:currentUser.email,upi,accName,accNo,ifsc,bank});
+  ['r-name','r-location','r-date','r-price','r-seats','r-desc','r-org','r-upi','r-acc-name','r-acc-no','r-ifsc','r-bank'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('r-cat').value='';document.getElementById('r-city').value='';
+  showModal('✨','Event Published!','Your event is now live. When buyers purchase tickets you will receive a notification to issue their pass.','home');
+}
+
+// ==================== MODAL ====================
+let _modalRedirect=null;
+function showModal(icon,title,msg,redirect){_modalRedirect=redirect||null;document.getElementById('modalIcon').textContent=icon;document.getElementById('modalTitle').textContent=title;document.getElementById('modalMsg').textContent=msg;document.getElementById('genericModal').classList.add('show');}
+function closeModal(){document.getElementById('genericModal').classList.remove('show');if(_modalRedirect)showPage(_modalRedirect);}
+
+// Close notif panel when clicking outside
+document.addEventListener('click',e=>{const panel=document.getElementById('notifPanel');const btn=document.querySelector('.notif-btn');if(panel.classList.contains('show')&&!panel.contains(e.target)&&!btn.contains(e.target))closeNotifPanel();});
+</script>
+</body>
+</html>
